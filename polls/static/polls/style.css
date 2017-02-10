@@ -1,0 +1,16 @@
+* {
+	font-family: sans-serif;
+}
+
+li a {
+    color: green;
+}
+
+body {
+    background: white url("images/background.png") no-repeat center top;
+}
+
+.content {
+	margin: 200px auto 0 auto;
+	width: 50%;
+}
