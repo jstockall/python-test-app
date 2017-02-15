@@ -1,55 +1,129 @@
 {
-    "family": "python-test-app",
-    "volumes": [
+  "requiresAttributes": [
+    {
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17",
+      "targetId": null,
+      "targetType": null
+    },
+    {
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.task-iam-role",
+      "targetId": null,
+      "targetType": null
+    },
+    {
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs",
+      "targetId": null,
+      "targetType": null
+    },
+    {
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19",
+      "targetId": null,
+      "targetType": null
+    }
+  ],
+  "taskDefinitionArn": "arn:aws:ecs:us-west-2:990382170807:task-definition/python-test-app:20",
+  "networkMode": "bridge",
+  "status": "ACTIVE",
+  "revision": 20,
+  "taskRoleArn": "arn:aws:iam::990382170807:role/Jesse-ECS",
+  "containerDefinitions": [
+    {
+      "volumesFrom": [],
+      "memory": 500,
+      "extraHosts": null,
+      "dnsServers": null,
+      "disableNetworking": null,
+      "dnsSearchDomains": null,
+      "portMappings": [],
+      "hostname": "db",
+      "essential": true,
+      "entryPoint": [],
+      "mountPoints": [
         {
-            "name": "my-vol",
-            "host": {}
+          "containerPath": "/var/lib/postgresql/data",
+          "sourceVolume": "data",
+          "readOnly": null
         }
-    ],
-    "containerDefinitions": [
-        {
-            "environment": [],
-            "name": "simple-app",
-            "image": "amazon/amazon-ecs-sample",
-            "cpu": 10,
-            "memory": 500,
-            "portMappings": [
-                {
-                    "containerPort": 80,
-                    "hostPort": 80
-                }
-            ],
-            "mountPoints": [
-                {
-                    "sourceVolume": "my-vol",
-                    "containerPath": "/var/www/my-vol"
-                }
-            ],
-            "entryPoint": [
-                "/usr/sbin/apache2",
-                "-D",
-                "FOREGROUND"
-            ],
-            "essential": true
-        },
-        {
-            "name": "busybox",
-            "image": "busybox",
-            "cpu": 10,
-            "memory": 500,
-            "volumesFrom": [
-            {
-              "sourceContainer": "simple-app"
-            }
-            ],
-            "entryPoint": [
-                "sh",
-                "-c"
-            ],
-            "command": [
-                "/bin/sh -c \"while true; do /bin/date > /var/www/my-vol/date; sleep 1; done\""
-            ],
-            "essential": false
+      ],
+      "name": "db",
+      "ulimits": null,
+      "dockerSecurityOptions": null,
+      "environment": [],
+      "links": null,
+      "workingDirectory": null,
+      "readonlyRootFilesystem": null,
+      "image": "postgres",
+      "command": null,
+      "user": null,
+      "dockerLabels": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "awslogs-jesse-python-test-app",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "db"
         }
-    ]
+      },
+      "cpu": 10,
+      "privileged": null,
+      "memoryReservation": null
+    },
+    {
+      "volumesFrom": [],
+      "memory": 500,
+      "extraHosts": null,
+      "dnsServers": null,
+      "disableNetworking": null,
+      "dnsSearchDomains": null,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "hostname": null,
+      "essential": true,
+      "entryPoint": [],
+      "mountPoints": [],
+      "name": "front-end",
+      "ulimits": null,
+      "dockerSecurityOptions": null,
+      "environment": [],
+      "links": [
+        "db"
+      ],
+      "workingDirectory": null,
+      "readonlyRootFilesystem": null,
+      "image": "stockallj/python-test-web-frontend",
+      "command": [],
+      "user": null,
+      "dockerLabels": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "awslogs-jesse-python-test-app",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "web"
+        }
+      },
+      "cpu": 10,
+      "privileged": null,
+      "memoryReservation": null
+    }
+  ],
+  "placementConstraints": [],
+  "volumes": [
+    {
+      "host": {
+        "sourcePath": "pg-data"
+      },
+      "name": "data"
+    }
+  ],
+  "family": "python-test-app"
 }
