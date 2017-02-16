@@ -1,2 +1,6 @@
 Django
 psycopg2
+rq
+redis
+django-rq
+django-redis-cache

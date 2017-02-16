@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
+import django_rq
+
 from .models import Choice, Question
 
 
@@ -35,6 +37,10 @@ class DetailView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
+    
+class VotingView(generic.DetailView):
+    model = Question
+    template_name = 'polls/voting.html'
 
 
 def vote(request, question_id):
@@ -47,12 +53,12 @@ def vote(request, question_id):
             'question': question,
             'error_message': "You didn't select a choice.",
         })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
+    else:        
+        django_rq.enqueue('polls.worker.vote', selected_choice.id)
+        
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+        return HttpResponseRedirect(reverse('polls:voting', args=(question.id,)))
 
 

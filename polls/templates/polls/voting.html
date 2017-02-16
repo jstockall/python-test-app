@@ -1,0 +1,17 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+
+<div class="content">
+
+	<h1>Registering your vote</h1>
+
+	<img src="{% static 'polls/images/throbber_13.gif' %}" alt="throbber"/>
+	
+	<a class="navlink" href="{% url 'polls:results' question.id %}">Click here to see results</a>
+</div>
+
+<script type="text/javascript">   
+	function redirect() {  window.location="{% url 'polls:results' question.id %}"; } 
+	setTimeout('redirect()', 3000); 
+</script>

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django_rq",
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,21 @@ DATABASES = {
         'USER': 'postgres',
         'HOST': 'db',
         'PORT': 5432,
+    }
+}
+
+# Redis Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'redis:6379',
+    },
+}
+
+# Redis Queues
+RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
     }
 }
 
